@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Yeni Öğrenci Analizi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0">Yeni Öğrenci İlgi Alanı Analizi</h4>
+      <a class="btn btn-outline-secondary btn-sm" href="/">Anasayfa</a>
+    </div>
+
+    <div class="alert alert-info small mb-3">
+      Lütfen her ifade için size en uygun seçeneği işaretleyin. (1: Hiç değil, 5: Kesinlikle Evet)
+    </div>
+
+    <form method="POST" class="card shadow-sm">
+      <div class="card-body">
+        {% for q, text in questions.items() %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold" for="{{ q }}">{{ loop.index }}. {{ text }}</label>
+            <select class="form-select" id="{{ q }}" name="{{ q }}" required>
+              <option value="1">1 - Hiç değil</option>
+              <option value="2">2 - Pek değil</option>
+              <option value="3" selected>3 - Kararsızım</option>
+              <option value="4">4 - Evet</option>
+              <option value="5">5 - Kesinlikle Evet</option>
+            </select>
+          </div>
+        {% endfor %}
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Analiz Et</button>
+        </div>
+      </div>
+    </form>
+
+    <p class="text-muted small mt-3 mb-0">
+      Not: Bu form verisi kalıcı olarak kaydedilmez; sadece anlık analiz için kullanılır.
+    </p>
+  </div>
+</body>
+</html>

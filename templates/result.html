@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Genel Analiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+  <div class="container py-4">
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0">Genel Analiz (Tüm Veri)</h4>
+      <a class="btn btn-outline-secondary btn-sm" href="/">Anasayfa</a>
+    </div>
+
+    <div class="row g-3">
+      <!-- Ortalama skorlar -->
+      <div class="col-12 col-lg-7">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="mb-3">Ortalama RIASEC Skorları</h6>
+
+            {% if scores %}
+              {% set order = ['R','I','A','S','E','C'] %}
+              {% for key in order %}
+                {% set value = scores.get(key, 0) %}
+                {% set pct = (value / max_score_per_area * 100) %}
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between small">
+                    <div class="fw-semibold">{{ key }}</div>
+                    <div class="text-muted">{{ value }} / {{ max_score_per_area }}</div>
+                  </div>
+                  <div class="progress" role="progressbar" aria-label="{{ key }} skor">
+                    <div class="progress-bar riasec-bar" data-pct="{{ pct|round(1) }}"></div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-muted mb-0">Skor verisi bulunamadı.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Ortalama profil: kural + ML -->
+      <div class="col-12 col-lg-5">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="mb-2">Ortalama Profil (Özet)</h6>
+
+            <div class="text-muted small">Kural tabanlı baskın alan</div>
+            <div class="fs-5 fw-bold mb-2">{{ dominant_rule_avg }}</div>
+
+            <div class="text-muted small">ML tahmini (karar destek)</div>
+            <div class="fs-5 fw-bold">{{ predicted_area }}</div>
+
+            <div class="mt-2">
+              {% if match_avg %}
+                <span class="badge text-bg-success">ML ile Uyuşuyor</span>
+              {% else %}
+                <span class="badge text-bg-warning">ML ile Farklı</span>
+              {% endif %}
+            </div>
+
+            {% if ml_conf is not none %}
+              <div class="text-muted small mt-2">
+                Model güveni (yaklaşık): <span class="fw-semibold">{{ (ml_conf * 100) | round(1) }}%</span>
+              </div>
+            {% endif %}
+
+            <hr class="my-3">
+
+            <div class="alert alert-secondary small mb-0">
+              <div class="fw-semibold mb-1">Tez Notu</div>
+              Bu sayfadaki birincil değerlendirme RIASEC skorlarına dayalıdır.
+              Makine öğrenmesi çıktısı, aynı kuralı öğrenen destekleyici bir karar destek katmanı olarak raporlanır.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Baskın alan dağılımı -->
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <h6 class="mb-3">Baskın Alan Dağılımı (Kural Tabanlı)</h6>
+
+        {% set order = ['R','I','A','S','E','C'] %}
+        {% set total = dominant_counts.values() | sum %}
+
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>Alan</th>
+                <th class="text-end">Sayı</th>
+                <th class="text-end">Oran</th>
+                <th style="width: 45%;">Görsel</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for k in order %}
+                {% set c = dominant_counts.get(k, 0) %}
+                {% set p = (c / total * 100) if total else 0 %}
+                <tr>
+                  <td class="fw-semibold">{{ k }}</td>
+                  <td class="text-end">{{ c }}</td>
+                  <td class="text-end">%{{ p | round(1) }}</td>
+                  <td>
+                    <div class="progress" role="progressbar" aria-label="{{ k }} dağılım">
+                      <div class="progress-bar riasec-bar" data-pct="{{ p | round(1) }}"></div>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+      <div class="col-12 col-lg-8">
+        <div class="card shadow-sm h-100 mt-3">
+          <div class="card-body">
+            <h6 class="mb-3">Confusion Matrix</h6>
+            <div class="table-responsive" style="max-width: 900px;">
+              {{ confusion_matrix | safe }}
+            </div>
+            <p class="text-muted small mb-0">
+              Satırlar gerçek sınıfları, sütunlar modelin tahminlerini göstermektedir.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.riasec-bar').forEach(el => {
+      const pct = el.dataset.pct || 0;
+      el.style.width = pct + '%';
+    });
+  </script>
+</body>
+</html>

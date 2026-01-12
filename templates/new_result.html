@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bireysel Analiz Sonucu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0">Bireysel İlgi Alanı Sonucu</h4>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary btn-sm" href="/new-analysis">Yeni Analiz</a>
+        <a class="btn btn-outline-secondary btn-sm" href="/">Anasayfa</a>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12 col-lg-7">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <div>
+                <div class="text-muted small">Birincil Sonuç (RIASEC Skorları)</div>
+                <div class="fs-4 fw-bold">{{ dominant_rule }}</div>
+                <div class="text-muted small">Top-3 Kod: <span class="fw-semibold">{{ top3 }}</span></div>
+              </div>
+              <div>
+                {% if match %}
+                  <span class="badge text-bg-success">ML ile Uyuşuyor</span>
+                {% else %}
+                  <span class="badge text-bg-warning">ML ile Farklı</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <hr class="my-3">
+
+            <p class="mb-2">{{ description_rule }}</p>
+
+            <div class="alert alert-secondary small mb-0">
+              <div class="fw-semibold mb-1">Karar Destek Notu</div>
+              Bu sayfada baskın alan, <span class="fw-semibold">RIASEC skorlarına göre</span> hesaplanmıştır.
+              Makine öğrenmesi modeli ise aynı veriden öğrenilen <span class="fw-semibold">destekleyici bir karar destek</span>
+              katmanı olarak ikinci bir görüş sunar.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-5">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="text-muted small">İkincil Sonuç (ML Tahmini)</div>
+            <div class="fs-4 fw-bold">{{ dominant_ml }}</div>
+            <p class="mb-2">{{ description_ml }}</p>
+
+            {% if ml_conf is not none %}
+              <div class="text-muted small">
+                Model güveni (yaklaşık): <span class="fw-semibold">{{ (ml_conf * 100) | round(1) }}%</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <h6 class="mb-3">RIASEC Skorları</h6>
+
+        {% set order = ['R','I','A','S','E','C'] %}
+        {% for key in order %}
+          {% set value = scores.get(key, 0) %}
+          {% set pct = (value / max_score_per_area * 100) %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small">
+              <div class="fw-semibold">{{ key }}</div>
+              <div class="text-muted">{{ value }} / {{ max_score_per_area }}</div>
+            </div>
+            <div class="progress" role="progressbar" aria-label="{{ key }} skor">
+                <div class="progress-bar" style="width: {{ pct }}%"></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <h6 class="mb-3">Önerilen Kulüp / Etkinlikler</h6>
+        <div class="row g-2">
+          {% for r in recommendations_rule %}
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="border rounded p-3 bg-white h-100">
+                <div class="fw-semibold">{{ r }}</div>
+                <div class="text-muted small">Baskın alanınıza uygun öneri</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>RIASEC AI Rehberlik Sistemi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .hero {
+      background: linear-gradient(135deg, rgba(13,110,253,0.10), rgba(25,135,84,0.10));
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .feature-icon {
+      width: 44px; height: 44px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      background: rgba(13,110,253,0.10);
+      border: 1px solid rgba(13,110,253,0.15);
+      font-weight: 700;
+    }
+    .card-hover { transition: transform .15s ease, box-shadow .15s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 0.5rem 1rem rgba(0,0,0,.08) !important; }
+    .small-muted { color: rgba(0,0,0,.6); }
+  </style>
+</head>
+
+<body class="bg-light">
+  <div class="container py-4">
+
+    <!-- Üst başlık -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <div class="text-muted small">RIASEC tabanlı yapay zekâ destekli rehberlik</div>
+        <h4 class="mb-0">RIASEC AI Rehberlik Sistemi</h4>
+      </div>
+      <span class="badge text-bg-secondary">Flask • ML (RandomForest) • Tez Projesi</span>
+    </div>
+
+    <!-- Hero -->
+    <div class="p-4 rounded-3 shadow-sm hero mb-3">
+      <div class="row g-3 align-items-center">
+        <div class="col-12 col-lg-8">
+          <h5 class="mb-2">Ortaokul (5–8. sınıf) öğrencileri için ilgi alanı analizi ve etkinlik önerisi</h5>
+          <p class="mb-3 small-muted">
+            Sistem, 42 maddelik Likert ölçeği ile öğrencinin RIASEC (R, I, A, S, E, C) profilini hesaplar.
+            Makine öğrenmesi modeli, aynı veriden öğrenilmiş destekleyici bir karar destek katmanı olarak ikinci görüş sunar.
+          </p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="/new-analysis" class="btn btn-primary">Yeni Öğrenci Analizi</a>
+            <a href="/analyze" class="btn btn-outline-primary">Genel Analiz (Tüm Veri)</a>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="fw-semibold mb-2">RIASEC Alanları</div>
+              <div class="small">
+                <div><span class="fw-semibold">R</span> – Realistic (Uygulamalı)</div>
+                <div><span class="fw-semibold">I</span> – Investigative (Araştırmacı)</div>
+                <div><span class="fw-semibold">A</span> – Artistic (Sanatsal)</div>
+                <div><span class="fw-semibold">S</span> – Social (Sosyal)</div>
+                <div><span class="fw-semibold">E</span> – Enterprising (Girişimci)</div>
+                <div><span class="fw-semibold">C</span> – Conventional (Düzenli)</div>
+              </div>
+              <hr class="my-3">
+              <div class="text-muted small">
+                Veri: Google Forms (54 kayıt) • Likert 1–5
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hızlı erişim kartları -->
+    <div class="row g-3">
+      <div class="col-12 col-lg-4">
+        <div class="card shadow-sm card-hover h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="feature-icon">1</span>
+              <div class="fw-semibold">Yeni Öğrenci Analizi</div>
+            </div>
+            <div class="text-muted small mb-3">
+              Öğrenci formu doldurur. Veri kaydedilmez; anlık skor + öneri üretilir.
+            </div>
+            <a href="/new-analysis" class="btn btn-sm btn-primary">Başla</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <div class="card shadow-sm card-hover h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="feature-icon">2</span>
+              <div class="fw-semibold">Genel Analiz (Tüm Veri)</div>
+            </div>
+            <div class="text-muted small mb-3">
+              Tüm veri üzerinden ortalama skorlar, baskın alan dağılımı ve model metrikleri.
+            </div>
+            <a href="/analyze" class="btn btn-sm btn-outline-primary">Görüntüle</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <div class="card shadow-sm card-hover h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="feature-icon">3</span>
+              <div class="fw-semibold">Tez Odaklı Açıklama</div>
+            </div>
+            <div class="text-muted small mb-3">
+              Birincil değerlendirme RIASEC skoru, ML ise destekleyici karar destek katmanı olarak raporlanır.
+            </div>
+
+            <details class="small">
+              <summary class="fw-semibold">Karar destek notunu göster</summary>
+              <div class="mt-2 text-muted">
+                Bu çalışmada modelin amacı “meslek tahmini” yapmak değil; RIASEC kuralını öğrenerek
+                kural tabanlı sonuca ikinci bir bakış sağlamaktır. Veri seti boyutu nedeniyle metrikler
+                yüksek doğruluk hedefiyle değil, karar destek bağlamında yorumlanır.
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-muted small mt-4">
+      © RIASEC AI Rehberlik Sistemi • Flask tabanlı web uygulaması
+    </div>
+
+  </div>
+</body>
+</html>
